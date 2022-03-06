@@ -1,4 +1,4 @@
-# webman exception handler 异常接管插件
+# webman exception handler 异常插件
 
 [![Latest Stable Version](http://poser.pugx.org/tinywan/exception-handler/v)](https://packagist.org/packages/tinywan/exception-handler)
 [![Total Downloads](http://poser.pugx.org/tinywan/exception-handler/downloads)](https://packagist.org/packages/tinywan/exception-handler)
@@ -79,11 +79,11 @@ Content-Type: application/json;charset=utf-8
 }
 ```
 
-## 自定义自己的异常类
+## 如何自定义一个自己的异常类
 
-### 定义异常类
+### 编写异常类
 
-自定义一个：`405 Method Not Allowed`（表示：请求行中指定的请求方法不能被用于请求相应的资源）
+假设自定义一个：`405 Method Not Allowed`（表示：请求行中指定的请求方法不能被用于请求相应的资源）
 
 自定义异常类只需要继承`Tinywan\ExceptionHandler\Exception\BaseException`类即可
 
@@ -109,7 +109,8 @@ class MethodNotAllowedException extends BaseException
 }
 ```
 
-### 使用自定义
+### 使用异常类
+
 ```php
 use support\Request;
 use support\Response;
@@ -132,7 +133,7 @@ class Token{
 
 ## 已支持插件异常类
 
-- [Validate 验证器插件](https://www.workerman.net/plugin/10) 异常类`JwtTokenException`
+- [Validate 验证器插件](https://www.workerman.net/plugin/7) 异常类`JwtTokenException`
 - [JWT 权限认证插件](https://www.workerman.net/plugin/10) 异常类`ValidateException`
 
 ## 内置异常类
