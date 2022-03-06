@@ -14,11 +14,11 @@ use Throwable;
 use Tinywan\ExceptionHandler\Exception\BaseException;
 use Tinywan\Jwt\Exception\JwtTokenException;
 use Tinywan\Validate\Exception\ValidateException;
-use Webman\Exception\ExceptionHandler as WebmanExceptionHandler;
+use Webman\Exception\ExceptionHandler;
 use Webman\Http\Request;
 use Webman\Http\Response;
 
-class ExceptionHandler extends WebmanExceptionHandler
+class Handler extends ExceptionHandler
 {
     /**
      * 不需要记录错误日志.

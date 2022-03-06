@@ -20,7 +20,7 @@ composer require tinywan/exception-handler
 ```php
 return [
     // 这里配置异常处理类
-    '' => \Tinywan\ExceptionHandler\ExceptionHandler::class,
+    '' => \Tinywan\ExceptionHandler\Handler::class,
 ];
 ```
 > 多应用模式时，你可以为每个应用单独配置异常处理类，参见[多应用](https://www.workerman.net/doc/webman/multiapp.html)
@@ -50,7 +50,7 @@ Content-Type: application/json;charset=utf-8
 
 {
     "code": 0,
-    "msg": "password不允许为空",
+    "msg": "账号或密码不能为空",
     "data": {},
 }
 ```
@@ -125,9 +125,10 @@ class Token{
     }
 }
 ```
-使用postman请求截图
-![self-exception.png](self-exception.png)
 
+使用postman请求截图
+
+![self-exception.png](self-exception.png)
 
 ## 插件内置异常类
 
