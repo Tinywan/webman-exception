@@ -130,12 +130,12 @@ class Token{
 
 ![self-exception.png](self-exception.png)
 
-## 插件已支持异常类
+## 已支持插件异常类
 
 - [Validate 验证器插件](https://www.workerman.net/plugin/10) 异常类`JwtTokenException`
 - [JWT 权限认证插件](https://www.workerman.net/plugin/10) 异常类`ValidateException`
 
-## 插件内置异常类
+## 内置异常类
 
 - 客户端异常类（HTTP Status 400）：BadRequestHttpException
 - 身份认证异常类（HTTP Status 401）：UnauthorizedHttpException
