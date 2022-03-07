@@ -12,7 +12,9 @@ return [
             Tinywan\ExceptionHandler\Exception\NotFoundHttpException::class,
             Tinywan\ExceptionHandler\Exception\RouteNotFoundException::class,
             Tinywan\ExceptionHandler\Exception\TooManyRequestsHttpException::class,
-            Tinywan\ExceptionHandler\Exception\ServerErrorHttpException::class
+            Tinywan\ExceptionHandler\Exception\ServerErrorHttpException::class,
+            Tinywan\Validate\Exception\ValidateException::class,
+            Tinywan\Jwt\Exception\JwtTokenException::class
         ]
     ],
 ];
