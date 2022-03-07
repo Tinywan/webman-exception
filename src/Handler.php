@@ -32,6 +32,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
+        $this->dontReport = config('plugin.tinywan.exception-handler.app.exception_handler', []);
         parent::report($exception);
     }
 
