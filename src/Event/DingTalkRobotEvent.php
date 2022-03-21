@@ -20,7 +20,7 @@ class DingTalkRobotEvent
      */
     public static function dingTalkRobot(array $args)
     {
-        $config =  config('plugin.tinywan.exception-handler.app.event');
+        $config =  config('plugin.tinywan.exception-handler.app.event.ding_talk');
         $accessToken = $config['accessToken'];
         $secret = $config['secret'];
         $title = $config['title'];

@@ -148,6 +148,10 @@ class Token{
 
 [更多：https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status)
 
+## 异常通知（钉钉机器人）
+
+![dingtalk.png](dingtalk.png)
+
 ## Other
 
 ### phpstan
