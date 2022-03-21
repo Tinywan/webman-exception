@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tinywan\ExceptionHandler;
 
 use Throwable;
+use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
 use Tinywan\Jwt\Exception\JwtTokenException;
 use Tinywan\Validate\Exception\ValidateException;
@@ -66,8 +67,8 @@ class Handler extends ExceptionHandler
             if ($e instanceof ValidateException) {
                 $statusCode = 400;
             } elseif ($e instanceof JwtTokenException) {
-                $statusCode = 403;
-                $errorMessage = '对不起，您没有该接口访问权限，请联系管理员';
+                $statusCode = 401;
+                $errorMessage = $e->getMessage();
             } elseif ($e instanceof \InvalidArgumentException) {
                 $statusCode = 415;
                 $errorMessage = '预期参数配置异常：' . $e->getMessage();
@@ -82,6 +83,13 @@ class Handler extends ExceptionHandler
             $responseData['error_trace'] = $e->getTraceAsString();
         }
 
+        $config = config('plugin.tinywan.exception-handler.app.event');
+        if ($config['enable']) {
+            $responseData['message'] = $errorMessage;
+            $responseData['file'] = $e->getFile();
+            $responseData['line'] = $e->getLine();
+            DingTalkRobotEvent::dingTalkRobot($responseData);
+        }
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
         return new Response($statusCode, $header, json_encode(['code' => $errorCode, 'msg' => $errorMessage,'data' => $responseData]));
     }
