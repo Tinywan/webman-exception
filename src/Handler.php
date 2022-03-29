@@ -14,6 +14,7 @@ use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
 use Tinywan\Jwt\Exception\JwtTokenException;
+use Tinywan\Jwt\Exception\JwtTokenExpiredException;
 use Tinywan\Validate\Exception\ValidateException;
 use Webman\Exception\ExceptionHandler;
 use Webman\Http\Request;
@@ -69,7 +70,10 @@ class Handler extends ExceptionHandler
             } elseif ($e instanceof JwtTokenException) {
                 $statusCode = 401;
                 $errorMessage = $e->getMessage();
-            } elseif ($e instanceof \InvalidArgumentException) {
+            } elseif ($e instanceof JwtTokenExpiredException) {
+                $statusCode = 402;
+                $errorMessage = $e->getMessage();
+            }  elseif ($e instanceof \InvalidArgumentException) {
                 $statusCode = 415;
                 $errorMessage = '预期参数配置异常：' . $e->getMessage();
             } else {
