@@ -23,10 +23,10 @@ class BadRequestHttpException extends BaseException
     /**
      * @var int
      */
-    public int $statusCode = 400;
+    public $statusCode = 400;
 
     /**
      * @var string
      */
-    public string $errorMessage = '请求参数错误，服务器不能或不会处理该请求';
+    public $errorMessage = '请求参数错误，服务器不能或不会处理该请求';
 }

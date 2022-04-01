@@ -73,7 +73,7 @@ class Handler extends ExceptionHandler
             } elseif ($e instanceof JwtTokenExpiredException) {
                 $statusCode = 402;
                 $errorMessage = $e->getMessage();
-            }  elseif ($e instanceof \InvalidArgumentException) {
+            } elseif ($e instanceof \InvalidArgumentException) {
                 $statusCode = 415;
                 $errorMessage = '预期参数配置异常：' . $e->getMessage();
             } else {

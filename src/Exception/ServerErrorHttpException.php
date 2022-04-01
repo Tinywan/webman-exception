@@ -24,10 +24,10 @@ class ServerErrorHttpException extends BaseException
     /**
      * @var int
      */
-    public int $statusCode = 500;
+    public $statusCode = 500;
 
     /**
      * @var string
      */
-    public string $errorMessage = 'Internal Server Error';
+    public $errorMessage = 'Internal Server Error';
 }

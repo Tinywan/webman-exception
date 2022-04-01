@@ -15,31 +15,31 @@ class BaseException extends \Exception
     /**
      * HTTP Response Status Code.
      */
-    public int $statusCode = 400;
+    public $statusCode = 400;
 
     /**
      * HTTP Response Header.
      */
-    public array $header = [];
+    public $header = [];
 
     /**
      * Business Error code.
      *
      * @var int|mixed
      */
-    public int $errorCode = 0;
+    public $errorCode = 0;
 
     /**
      * Business Error message.
      * @var string
      */
-    public string $errorMessage = 'The requested resource is not available or not exists';
+    public $errorMessage = 'The requested resource is not available or not exists';
 
     /**
      * Business data.
      * @var array|mixed
      */
-    public array $data = [];
+    public $data = [];
 
     /**
      * BaseException constructor.

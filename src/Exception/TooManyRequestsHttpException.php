@@ -15,12 +15,12 @@ class TooManyRequestsHttpException extends BaseException
     /**
      * @var int
      */
-    public int $statusCode = 429;
+    public $statusCode = 429;
 
     /**
      * @var array
      */
-    public array $header = [
+    public $header = [
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Credentials' => 'true',
         'Access-Control-Allow-Headers' => 'Authorization,Content-Type,If-Match,If-Modified-Since,If-None-Match,If-Unmodified-Since,X-Requested-With,Origin',
@@ -33,10 +33,10 @@ class TooManyRequestsHttpException extends BaseException
     /**
      * @var int
      */
-    public int $errorCode = 0;
+    public $errorCode = 0;
 
     /**
      * @var string
      */
-    public string $errorMessage = "Too Many Requests, Please try again later";
+    public $errorMessage = "Too Many Requests, Please try again later";
 }
