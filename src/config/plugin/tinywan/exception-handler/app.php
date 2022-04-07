@@ -15,7 +15,18 @@ return [
             Tinywan\ExceptionHandler\Exception\ServerErrorHttpException::class,
             Tinywan\Validate\Exception\ValidateException::class,
             Tinywan\Jwt\Exception\JwtTokenException::class
-        ]
+        ],
+        // 自定义响应消息
+        'body' => [
+            'code' => 0,
+            'msg' => '服务器内部异常',
+            'data' => null
+        ],
+//        'body' => [
+//            'error_code' => 0,
+//            'message' => '服务器内部异常',
+//            'data' => null
+//        ]
     ],
     // 事件
     'event' => [

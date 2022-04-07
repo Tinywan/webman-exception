@@ -87,14 +87,18 @@ class Handler extends ExceptionHandler
             $responseData['error_trace'] = $e->getTraceAsString();
         }
 
-        $config = config('plugin.tinywan.exception-handler.app.event');
-        if ($config['enable']) {
+        $config = config('plugin.tinywan.exception-handler.app');
+        if ($config['event']['enable']) {
             $responseData['message'] = $errorMessage;
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();
             DingTalkRobotEvent::dingTalkRobot($responseData);
         }
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
-        return new Response($statusCode, $header, json_encode(['code' => $errorCode, 'msg' => $errorMessage,'data' => $responseData]));
+        $body = $config['exception_handler']['body'];
+        $body['code'] = $errorCode;
+        $body['msg'] = $errorMessage;
+        $body['data'] = $responseData;
+        return new Response($statusCode, $header, json_encode($body));
     }
 }
