@@ -5,7 +5,6 @@
  * @email 756684177@qq.com
  * @date 2022/3/6 14:08
  */
-
 declare(strict_types=1);
 
 namespace Tinywan\ExceptionHandler;
@@ -53,7 +52,7 @@ class Handler extends ExceptionHandler
             'client_ip' => $request->getRealIp(),
             'request_param' => $request->all()
         ];
-        $config = config('plugin.tinywan.exception-handler.app');
+        $config = config('plugin.tinywan.exception-handler.app.exception_handler');
         $errorCode = 0;
         $header = [];
         if ($e instanceof BaseException) {
@@ -95,8 +94,7 @@ class Handler extends ExceptionHandler
             DingTalkRobotEvent::dingTalkRobot($responseData);
         }
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
-        $body = $config['exception_handler']['body'];
-        $bodyKey = array_keys($body);
+        $bodyKey = array_keys($config['body']);
         $responseBody = [
             $bodyKey[0] ?? 'code' => $errorCode,
             $bodyKey[1] ?? 'msg' => $errorMessage,

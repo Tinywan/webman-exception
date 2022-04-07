@@ -29,15 +29,16 @@ return [
             'msg' => '服务器内部异常',
             'data' => null
         ],
+        // 事件
+        'event' => [
+            'enable' => false,
+            // 钉钉机器人
+            'ding_talk' => [
+                'accessToken' => 'xxxxxxxxxxxxxxxx',
+                'secret' => 'xxxxxxxxxxxxxxxx',
+                'title' => '钉钉机器人异常通知',
+            ]
+        ],
     ],
-    // 事件
-    'event' => [
-        'enable' => false,
-        // 钉钉机器人
-        'ding_talk' => [
-            'accessToken' => 'xxxxxxxxxxxxxxxx',
-            'secret' => 'xxxxxxxxxxxxxxxx',
-            'title' => '钉钉机器人异常通知',
-        ]
-    ],
+
 ];
