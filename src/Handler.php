@@ -53,6 +53,7 @@ class Handler extends ExceptionHandler
             'client_ip' => $request->getRealIp(),
             'request_param' => $request->all()
         ];
+        $config = config('plugin.tinywan.exception-handler.app');
         $errorCode = 0;
         $header = [];
         if ($e instanceof BaseException) {
@@ -66,18 +67,18 @@ class Handler extends ExceptionHandler
         } else {
             $errorMessage = $e->getMessage();
             if ($e instanceof ValidateException) {
-                $statusCode = 400;
+                $statusCode = $config['status']['validate'];
             } elseif ($e instanceof JwtTokenException) {
-                $statusCode = 401;
+                $statusCode = $config['status']['jwt_token'];
                 $errorMessage = $e->getMessage();
             } elseif ($e instanceof JwtTokenExpiredException) {
-                $statusCode = 402;
+                $statusCode = $config['status']['jwt_token_expired'];
                 $errorMessage = $e->getMessage();
             } elseif ($e instanceof \InvalidArgumentException) {
                 $statusCode = 415;
                 $errorMessage = '预期参数配置异常：' . $e->getMessage();
             } else {
-                $statusCode = 500;
+                $statusCode = $config['status']['server_error'];
                 $errorMessage = $e->getMessage();
                 $errorCode = 50000;
             }
@@ -87,7 +88,6 @@ class Handler extends ExceptionHandler
             $responseData['error_trace'] = $e->getTraceAsString();
         }
 
-        $config = config('plugin.tinywan.exception-handler.app');
         if ($config['event']['enable']) {
             $responseData['message'] = $errorMessage;
             $responseData['file'] = $e->getFile();
@@ -96,9 +96,12 @@ class Handler extends ExceptionHandler
         }
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
         $body = $config['exception_handler']['body'];
-        $body['code'] = $errorCode;
-        $body['msg'] = $errorMessage;
-        $body['data'] = $responseData;
-        return new Response($statusCode, $header, json_encode($body));
+        $bodyKey = array_keys($body);
+        $responseBody = [
+            $bodyKey[0] ?? 'code' => $errorCode,
+            $bodyKey[1] ?? 'msg' => $errorMessage,
+            $bodyKey[2] ?? 'data' => $responseData
+        ];
+        return new Response($statusCode, $header, json_encode($responseBody));
     }
 }
