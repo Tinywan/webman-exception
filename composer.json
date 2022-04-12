@@ -15,9 +15,10 @@
   },
   "require-dev": {
     "workerman/webman": "^1.0",
-    "tinywan/validate": "^0.0.3",
+    "tinywan/validate": "^0.0.6",
     "phpstan/phpstan": "^1.4",
     "friendsofphp/php-cs-fixer": "^3.6",
-    "tinywan/jwt": "^1.2"
+    "tinywan/jwt": "^1.2",
+    "tinywan/storage": "^0.2.2"
   }
 }
