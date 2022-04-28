@@ -100,6 +100,20 @@ class Handler extends ExceptionHandler
             $bodyKey[1] ?? 'msg' => $errorMessage,
             $bodyKey[2] ?? 'data' => $responseData
         ];
+
+        if(isset(request()->tracer) && isset(request()->rootSpan)){
+            $exceptionSpan = request()->tracer->newChild(request()->rootSpan->getContext());
+            $exceptionSpan->setName('exception');
+            $exceptionSpan->start();
+            $exceptionSpan->tag('error.code', (string) $errorCode);
+            $value = [
+                'event' => 'error',
+                'message' => $errorMessage,
+                'stack' => 'Exception:'.$e->getFile().'|'.$e->getLine(),
+            ];
+            $exceptionSpan->annotate(json_encode($value));
+            $exceptionSpan->finish();
+        }
         return new Response($statusCode, $header, json_encode($responseBody));
     }
 }
