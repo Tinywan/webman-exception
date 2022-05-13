@@ -93,7 +93,6 @@ class Handler extends ExceptionHandler
             $responseData['line'] = $e->getLine();
             DingTalkRobotEvent::dingTalkRobot($responseData);
         }
-        $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
         $bodyKey = array_keys($config['body']);
         $responseBody = [
             $bodyKey[0] ?? 'code' => $errorCode,
@@ -102,7 +101,9 @@ class Handler extends ExceptionHandler
         ];
 
         if(isset(request()->tracer) && isset(request()->rootSpan)){
-            $exceptionSpan = request()->tracer->newChild(request()->rootSpan->getContext());
+            $samplingFlags = request()->rootSpan->getContext();
+            $header['Trace-Id'] = $samplingFlags->getTraceId();
+            $exceptionSpan = request()->tracer->newChild($samplingFlags);
             $exceptionSpan->setName('exception');
             $exceptionSpan->start();
             $exceptionSpan->tag('error.code', (string) $errorCode);
@@ -113,7 +114,9 @@ class Handler extends ExceptionHandler
             ];
             $exceptionSpan->annotate(json_encode($value));
             $exceptionSpan->finish();
+
         }
+        $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $header);
         return new Response($statusCode, $header, json_encode($responseBody));
     }
 }
