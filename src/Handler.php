@@ -101,9 +101,9 @@ class Handler extends ExceptionHandler
         ];
 
         if(isset(request()->tracer) && isset(request()->rootSpan)){
-            $samplingFlags = request()->rootSpan->getContext();
-            $header['Trace-Id'] = $samplingFlags->getTraceId();
-            $exceptionSpan = request()->tracer->newChild($samplingFlags);
+            $flags = request()->rootSpan->getContext();
+            $header['Trace-Id'] = $flags->getTraceId();
+            $exceptionSpan = request()->tracer->newChild($flags);
             $exceptionSpan->setName('exception');
             $exceptionSpan->start();
             $exceptionSpan->tag('error.code', (string) $errorCode);
