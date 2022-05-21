@@ -197,6 +197,67 @@ Content-Type: application/json;charset=UTF-8
 ```
 其他的可以根据自身业务自定义即可
 
+## 扩展自己的 Handler
+
+当项目需要自定义情况比较多的时候，很可能需要扩展 Handler，此时可以继承 `Tinywan\ExceptionHandler\Handler` 然后修改对应方法即可。
+
+> 使用场景
+- response需要响应`xml`，而不是json格式，只需要覆盖`buildResponse`方法
+- 扩展其他Exception的响应，我只要覆盖`solveExtraException`
+- 要异常推送微信消息，我可以覆盖`triggerNotifyEvent`
+
+自定义异常 `ErrorHandler`
+
+```php
+
+namespace support;
+
+use Illuminate\Validation\ValidationException;
+use Tinywan\ExceptionHandler\Handler;
+use Webman\Http\Response;
+
+class ErrorHandler extends Handler
+{
+    /**
+     * @inheritDoc
+     */
+    protected function solveExtraException(\Throwable $e): void
+    {
+        // 当前项目下的异常扩展
+        if ($e instanceof ValidationException) {
+            $this->errorMessage = $e->validator->errors()->first();
+            $this->errorCode = 422;
+            return;
+        }
+
+        parent::solveExtraException($e);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function triggerNotifyEvent(\Throwable $e): void
+    {
+         // ... 这里省略触发其他错误推送渠道
+
+        parent::triggerNotifyEvent($e);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function buildResponse(): Response
+    {
+        // 构造自己项目下的响应
+        return json([
+            'code' => $this->statusCode, // 使用 statusCode 作为 code 返回
+            'msg' => $this->errorMessage,
+            'data' => $this->responseData,
+        ]);
+    }
+}
+```
+
 ## 异常通知（钉钉机器人）
 
 ![dingtalk.png](dingtalk.png)
