@@ -12,6 +12,9 @@ namespace Tinywan\ExceptionHandler;
 use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
+use Tinywan\Jwt\Exception\JwtTokenException;
+use Tinywan\Jwt\Exception\JwtTokenExpiredException;
+use Tinywan\Validate\Exception\ValidateException;
 use Webman\Exception\ExceptionHandler;
 use Webman\Http\Request;
 use Webman\Http\Response;
@@ -26,16 +29,32 @@ class Handler extends ExceptionHandler
     public $dontReport = [];
 
     /**
-     * 异常信息数据.
+     * HTTP Response Status Code.
      *
      * @var array
      */
-    protected $exceptionInfo = [
-        'statusCode' => 0,
-        'responseHeader' => [],
-        'errorCode' => 0,
-        'errorMsg' => '',
-    ];
+    public $statusCode = 200;
+
+    /**
+     * HTTP Response Header.
+     *
+     * @var array
+     */
+    public $header = [];
+
+    /**
+     * Business Error code.
+     *
+     * @var int
+     */
+    public $errorCode = 0;
+
+    /**
+     * Business Error message.
+     *
+     * @var string
+     */
+    public $errorMessage = 'no error';
 
     /**
      * 响应结果数据.
@@ -101,18 +120,16 @@ class Handler extends ExceptionHandler
      */
     protected function solveAllException(Throwable $e)
     {
-        // 处理常用的 http 异常
         if ($e instanceof BaseException) {
-            $this->exceptionInfo['statusCode'] = $e->statusCode;
-            $this->exceptionInfo['responseHeader'] = $e->header;
-            $this->exceptionInfo['errorMsg'] = $e->errorMessage;
-            $this->exceptionInfo['errorCode'] = $e->errorCode;
-            if ($e->data) {
+            $this->statusCode = $e->statusCode;
+            $this->header = $e->header;
+            $this->errorCode = $e->errorCode;
+            $this->errorMessage = $e->errorMessage;
+            if (isset($e->data)) {
                 $this->responseData = array_merge($this->responseData, $e->data);
             }
             return;
         }
-        // 处理扩展的其他异常
         $this->solveExtraException($e);
     }
 
@@ -124,33 +141,31 @@ class Handler extends ExceptionHandler
     protected function solveExtraException(Throwable $e): void
     {
         $status = $this->config['status'];
-
-        $this->exceptionInfo['errorMsg'] = $e->getMessage();
-        if ($e instanceof \Tinywan\Validate\Exception\ValidateException) {
-            $this->exceptionInfo['statusCode'] = $status['validate'];
-        } elseif ($e instanceof \Tinywan\Jwt\Exception\JwtTokenException) {
-            $this->exceptionInfo['statusCode'] = $status['jwt_token'];
-        } elseif ($e instanceof \Tinywan\Jwt\Exception\JwtTokenExpiredException) {
-            $this->exceptionInfo['statusCode'] = $status['jwt_token_expired'];
+        $this->errorMessage = $e->getMessage();
+        if ($e instanceof ValidateException) {
+            $this->statusCode = $status['validate'];
+        } elseif ($e instanceof JwtTokenException) {
+            $this->statusCode = $status['jwt_token'];
+        } elseif ($e instanceof JwtTokenExpiredException) {
+            $this->statusCode = $status['jwt_token_expired'];
         } elseif ($e instanceof \InvalidArgumentException) {
-            $this->exceptionInfo['statusCode'] = $status['invalid_argument'] ?? 415;
-            $this->exceptionInfo['errorMsg'] = '预期参数配置异常：' . $e->getMessage();
+            $this->statusCode = $status['invalid_argument'] ?? 415;
+            $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
         } else {
-            $this->exceptionInfo['statusCode'] = $status['server_error'];
-            $this->exceptionInfo['errorCode'] = 50000;
+            $this->statusCode = $status['server_error'];
+            $this->errorMessage = $e->getMessage();
         }
     }
 
     /**
-     * 添加 debug 信息到 response.
-     *
+     * 调试模式：错误处理器会显示异常以及详细的函数调用栈和源代码行数来帮助调试，将返回详细的异常信息。
      * @param Throwable $e
      * @return void
      */
     protected function addDebugInfoToResponse(Throwable $e): void
     {
         if (config('app.debug', false)) {
-            $this->responseData['error_message'] = $this->exceptionInfo['errorMsg'];
+            $this->responseData['error_message'] = $this->errorMessage;
             $this->responseData['error_trace'] = explode("\n", $e->getTraceAsString());
         }
     }
@@ -164,7 +179,7 @@ class Handler extends ExceptionHandler
     protected function triggerNotifyEvent(Throwable $e): void
     {
         if ($this->config['event']['enable'] ?? false) {
-            $responseData['message'] = $this->exceptionInfo['errorMsg'];
+            $responseData['message'] = $this->errorMessage;
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();
             DingTalkRobotEvent::dingTalkRobot($responseData);
@@ -181,14 +196,14 @@ class Handler extends ExceptionHandler
     {
         if (isset(request()->tracer) && isset(request()->rootSpan)) {
             $samplingFlags = request()->rootSpan->getContext();
-            $this->exceptionInfo['header']['Trace-Id'] = $samplingFlags->getTraceId();
+            $this->header['Trace-Id'] = $samplingFlags->getTraceId();
             $exceptionSpan = request()->tracer->newChild($samplingFlags);
             $exceptionSpan->setName('exception');
             $exceptionSpan->start();
-            $exceptionSpan->tag('error.code', (string)$this->exceptionInfo['errorCode']);
+            $exceptionSpan->tag('error.code', (string) $this->errorCode);
             $value = [
                 'event' => 'error',
-                'message' => $this->exceptionInfo['errorMsg'],
+                'message' => $this->errorMessage,
                 'stack' => 'Exception:' . $e->getFile() . '|' . $e->getLine(),
             ];
             $exceptionSpan->annotate(json_encode($value));
@@ -205,12 +220,12 @@ class Handler extends ExceptionHandler
     {
         $bodyKey = array_keys($this->config['body']);
         $responseBody = [
-            $bodyKey[0] ?? 'code' => $this->exceptionInfo['errorCode'],
-            $bodyKey[1] ?? 'msg' => $this->exceptionInfo['errorMsg'],
+            $bodyKey[0] ?? 'code' => $this->errorCode,
+            $bodyKey[1] ?? 'msg' => $this->errorMessage,
             $bodyKey[2] ?? 'data' => $this->responseData,
         ];
 
-        $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->exceptionInfo['responseHeader']);
-        return new Response($this->exceptionInfo['statusCode'], $header, json_encode($responseBody));
+        $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->header);
+        return new Response($this->statusCode, $header, json_encode($responseBody));
     }
 }
