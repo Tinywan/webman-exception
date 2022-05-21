@@ -78,6 +78,30 @@ Content-Type: application/json;charset=utf-8
     }
 }
 ```
+增加异常扩展响应数据
+```php
+throw new BadRequestHttpException('验证码错误',[
+    'data' => [
+        'data1' => '自定义响应数据1',
+        'data2' => '自定义响应数据2',
+    ]
+]);
+```
+> 将会在响应的 `data` 增加自义定的扩展响应参数
+
+增加`data`的返回详细的异常信息
+```json
+{
+    "code": 0,
+    "msg": "验证码错误",
+    "data": {
+        "request_url": "POST //127.0.0.1:8888/oauth/issue-token",
+         ...
+        "data1": "自定义响应数据1",
+        "data2": "自定义响应数据2"
+    }
+}
+```
 
 ## 如何自定义一个自己的异常类
 
