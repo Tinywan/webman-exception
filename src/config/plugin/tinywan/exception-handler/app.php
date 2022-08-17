@@ -29,8 +29,8 @@ return [
             'msg' => '服务器内部异常',
             'data' => null
         ],
-        // 事件
-        'event' => [
+        // 事件，event 与 webman/event 存在冲突，event 重命名为 event_trigger
+        'event_trigger' => [
             'enable' => false,
             // 钉钉机器人
             'ding_talk' => [
