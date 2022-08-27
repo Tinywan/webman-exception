@@ -167,6 +167,8 @@ class Handler extends ExceptionHandler
         if (config('app.debug', false)) {
             $this->responseData['error_message'] = $this->errorMessage;
             $this->responseData['error_trace'] = explode("\n", $e->getTraceAsString());
+            $this->responseData['file'] = $e->getFile();
+            $this->responseData['line'] = $e->getLine();
         }
     }
 
@@ -179,6 +181,7 @@ class Handler extends ExceptionHandler
     protected function triggerNotifyEvent(Throwable $e): void
     {
         if ($this->config['event_trigger']['enable'] ?? false) {
+            $responseData = $this->responseData;
             $responseData['message'] = $this->errorMessage;
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();

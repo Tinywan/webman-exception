@@ -23,6 +23,7 @@ class DingTalkRobotEvent
         $secret = $config['secret'];
         $title = $config['title'];
         $message = ' --- ' . " \n";
+        $message .= ' - 请求时间：' . $args['timestamp'] . " \n";
         $message .= ' - 请求路由：' . $args['request_url'] . " \n";
         $message .= " - 请求IP：" . $args['client_ip'] . " \n";
         $message .= ' - 请求参数：' . json_encode($args['request_param']) . " \n";
@@ -76,6 +77,8 @@ class DingTalkRobotEvent
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=utf-8'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $data = curl_exec($ch);
         curl_close($ch);
         return $data;
