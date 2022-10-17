@@ -19,8 +19,9 @@ return [
         // 自定义HTTP状态码
         'status' => [
             'validate' => 400, // 验证器异常
-            'jwt_token' => 401, // JWT 认证失败
-            'jwt_token_expired' => 402, // JWT 令牌过期
+            'jwt_token' => 401, // 认证失败
+            'jwt_token_expired' => 401, // 访问令牌过期
+            'jwt_refresh_token_expired' => 402, // 刷新令牌过期
             'server_error' => 500, // 服务器内部错误
         ],
         // 自定义响应消息

@@ -12,6 +12,7 @@ namespace Tinywan\ExceptionHandler;
 use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
+use Tinywan\Jwt\Exception\JwtRefreshTokenExpiredException;
 use Tinywan\Jwt\Exception\JwtTokenException;
 use Tinywan\Jwt\Exception\JwtTokenExpiredException;
 use Tinywan\Validate\Exception\ValidateException;
@@ -148,7 +149,9 @@ class Handler extends ExceptionHandler
             $this->statusCode = $status['jwt_token'];
         } elseif ($e instanceof JwtTokenExpiredException) {
             $this->statusCode = $status['jwt_token_expired'];
-        } elseif ($e instanceof \InvalidArgumentException) {
+        } elseif ($e instanceof JwtRefreshTokenExpiredException) {
+            $this->statusCode = $status['jwt_refresh_token_expired'];
+        }  elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
         } else {
