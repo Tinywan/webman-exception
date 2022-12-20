@@ -2,6 +2,7 @@
 
 [![Latest Stable Version](http://poser.pugx.org/tinywan/exception-handler/v)](https://packagist.org/packages/tinywan/exception-handler)
 [![Total Downloads](http://poser.pugx.org/tinywan/exception-handler/downloads)](https://packagist.org/packages/tinywan/exception-handler)
+[![Daily Downloads](http://poser.pugx.org/tinywan/exception-handler/d/daily)](https://packagist.org/packages/tinywan/exception-handler)
 [![License](http://poser.pugx.org/tinywan/exception-handler/license)](https://packagist.org/packages/tinywan/exception-handler)
 [![PHP Version Require](http://poser.pugx.org/tinywan/exception-handler/require/php)](https://packagist.org/packages/tinywan/exception-handler)
 [![exception-handler](https://img.shields.io/github/last-commit/tinywan/exception-handler/main)]()
