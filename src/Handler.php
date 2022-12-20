@@ -183,7 +183,7 @@ class Handler extends ExceptionHandler
      */
     protected function triggerNotifyEvent(Throwable $e): void
     {
-        if ($this->config['event_trigger']['enable'] ?? false) {
+        if (!$this->shouldntReport($e) && $this->config['event_trigger']['enable'] ?? false) {
             $responseData = $this->responseData;
             $responseData['message'] = $this->errorMessage;
             $responseData['file'] = $e->getFile();
