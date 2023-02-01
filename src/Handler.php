@@ -186,6 +186,7 @@ class Handler extends ExceptionHandler
         if (!$this->shouldntReport($e) && $this->config['event_trigger']['enable'] ?? false) {
             $responseData = $this->responseData;
             $responseData['message'] = $this->errorMessage;
+            $responseData['error'] = $e->getMessage();
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();
             DingTalkRobotEvent::dingTalkRobot($responseData);
