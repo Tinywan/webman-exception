@@ -22,13 +22,13 @@ class DingTalkRobotEvent
         $accessToken = $config['accessToken'];
         $secret = $config['secret'];
         $title = $config['title'];
-        $message = ' - 响应错误： ' .$args['message']. " \n";
+        $message = ' - <font color="#dd00dd">监控来源： ' .$title. "</font> \n";
+        $message .= ' - 响应错误： ' .$args['message']. " \n";
         $message .= ' - 详细错误：' . $args['error'] . " \n";
-        $message .= ' - 请求路由：' . $args['url'] . " \n";
-        $message .= ' - 请求IP：' . $args['ip'] . " \n";
+        $message .= ' - 请求路由：' . $args['request_url'] . " \n";
+        $message .= ' - 请求IP：' . $args['client_ip'] . " \n";
         $message .= ' - 请求时间：' . $args['timestamp'] . " \n";
-        $message .= ' - 请求参数：' . json_encode($args['param']) . " \n";
-        $message .= ' - 请求域名：' . $args['domain'] . " \n";
+        $message .= ' - 请求参数：' . json_encode($args['request_param']) . " \n";
         $message .= ' - 异常文件：' . $args['file'] . " \n";
         $message .= ' - 异常文件行数：' . $args['line'] . " \n";
         $data = [
@@ -38,7 +38,7 @@ class DingTalkRobotEvent
                 'text' => $message
             ],
             'at' => [
-                'isAtAll' => true
+                'isAtAll' => false
             ]
         ];
         $orderPayUrl = 'https://oapi.dingtalk.com/robot/send?access_token=' . $accessToken;
