@@ -107,6 +107,8 @@ class Handler extends ExceptionHandler
     protected function addRequestInfoToResponse(Request $request): void
     {
         $this->responseData = array_merge($this->responseData, [
+            'domain' => $request->fullUrl(),
+            'method' => $request->method(),
             'request_url' => $request->method() . ' ' . $request->fullUrl(),
             'timestamp' => date('Y-m-d H:i:s'),
             'client_ip' => $request->getRealIp(),
