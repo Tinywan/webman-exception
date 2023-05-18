@@ -14,15 +14,21 @@ class DingTalkRobotEvent
     /**
      * 发送钉钉机器人
      * @param array $args
+     * @param array $config
+     * @param string $name
      * @return bool|string
      */
-    public static function dingTalkRobot(array $args)
+    public static function dingTalkRobot(array $args, array $config, string $name = '')
     {
-        $config =  config('plugin.tinywan.exception-handler.app.exception_handler.event_trigger.ding_talk');
+        $config =  $config['event_trigger']['dingtalk'];
         $accessToken = $config['accessToken'];
         $secret = $config['secret'];
         $title = $config['title'];
         $message = ' - <font color="#dd00dd">监控来源： ' .$title. "</font> \n";
+        if (!empty($name)) {
+            $title = $name;
+            $message = ' - <font color="#dd0000">监控来源： ' .$title. "</font> \n";
+        }
         $message .= ' - 响应错误： ' .$args['message']. " \n";
         $message .= ' - 详细错误：' . $args['error'] . " \n";
         $message .= ' - 请求路由：' . $args['request_url'] . " \n";

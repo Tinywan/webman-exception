@@ -189,7 +189,7 @@ class Handler extends ExceptionHandler
             $responseData['error'] = $e->getMessage();
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();
-            DingTalkRobotEvent::dingTalkRobot($responseData);
+            DingTalkRobotEvent::dingTalkRobot($responseData, $this->config);
         }
     }
 
