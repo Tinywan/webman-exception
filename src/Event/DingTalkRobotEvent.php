@@ -64,7 +64,12 @@ class DingTalkRobotEvent
         $timestamp = (float)sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
         $data = $timestamp . "\n" . $secret;
         $signStr = base64_encode(hash_hmac('sha256', $data, $secret, true));
-        $signStr = utf8_encode(urlencode($signStr));
+        if(PHP_VERSION_ID < 82000){
+            $signStr = mb_convert_encoding($signStr, 'UTF-8', 'ISO-8859-1');
+        } else {
+            $signStr = utf8_encode(urlencode($signStr));
+        }
+        $signStr = mb_convert_encoding(urlencode($signStr), 'UTF-8', 'ISO-8859-1');
         return $url . "&timestamp=$timestamp&sign=$signStr";
     }
 
