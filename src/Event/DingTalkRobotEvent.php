@@ -31,7 +31,7 @@ class DingTalkRobotEvent
         }
         $message .= ' - 响应错误： ' .$args['message']. " \n";
         $message .= ' - 详细错误：' . $args['error'] . " \n";
-        $message .= ' - 请求域名：' . $args['domain'] ?? '--' . " \n";
+        $message .= ' - 请求域名：' . $args['domain'] ?? '__' . " \n";
         $message .= ' - 请求路由：' . $args['request_url'] . " \n";
         $message .= ' - 请求IP：' . $args['client_ip'] . " \n";
         $message .= ' - 请求时间：' . $args['timestamp'] . " \n";
