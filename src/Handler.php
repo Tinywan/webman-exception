@@ -12,6 +12,7 @@ namespace Tinywan\ExceptionHandler;
 use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
+use Tinywan\ExceptionHandler\Exception\ServerErrorHttpException;
 use Tinywan\Jwt\Exception\JwtRefreshTokenExpiredException;
 use Tinywan\Jwt\Exception\JwtTokenException;
 use Tinywan\Jwt\Exception\JwtTokenExpiredException;
@@ -131,15 +132,17 @@ class Handler extends ExceptionHandler
             if (isset($e->data)) {
                 $this->responseData = array_merge($this->responseData, $e->data);
             }
-            return;
+            if (!$e instanceof ServerErrorHttpException) {
+                return;
+            }
         }
         $this->solveExtraException($e);
     }
 
     /**
-     * 处理扩展的异常.
-     *
+     * @desc: 处理扩展的异常
      * @param Throwable $e
+     * @author Tinywan(ShaoBo Wan)
      */
     protected function solveExtraException(Throwable $e): void
     {
@@ -156,7 +159,10 @@ class Handler extends ExceptionHandler
         }  elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
-        } else {
+        } elseif ($e instanceof ServerErrorHttpException) {
+            $this->statusCode = 500;
+            $this->errorMessage = $e->errorMessage;
+        }  else {
             $this->statusCode = $status['server_error'];
             $this->errorMessage = $e->getMessage();
         }
