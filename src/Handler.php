@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tinywan\ExceptionHandler;
 
+use FastRoute\BadRouteException;
 use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
@@ -148,9 +149,11 @@ class Handler extends ExceptionHandler
     {
         $status = $this->config['status'];
         $this->errorMessage = $e->getMessage();
-        if ($e instanceof ValidateException) {
+        if ($e instanceof BadRouteException) {
+            $this->statusCode = $status['route'] ?? 404;
+        } elseif ($e instanceof ValidateException) {
             $this->statusCode = $status['validate'];
-        } elseif ($e instanceof JwtTokenException) {
+        }  elseif ($e instanceof JwtTokenException) {
             $this->statusCode = $status['jwt_token'];
         } elseif ($e instanceof JwtTokenExpiredException) {
             $this->statusCode = $status['jwt_token_expired'];
@@ -160,11 +163,11 @@ class Handler extends ExceptionHandler
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
         } elseif ($e instanceof ServerErrorHttpException) {
-            $this->statusCode = 500;
+            $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = $e->errorMessage;
-        }  else {
-            $this->statusCode = $status['server_error'];
-            $this->errorMessage = $e->getMessage();
+        } else {
+            $this->statusCode = $status['server_error'] ?? 500;
+            $this->errorMessage = 'Server Unknown Error';
         }
     }
 
