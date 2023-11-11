@@ -34,7 +34,7 @@ return [
         'event_trigger' => [
             'enable' => false,
             // 钉钉机器人
-            'ding_talk' => [
+            'dingtalk' => [
                 'accessToken' => 'xxxxxxxxxxxxxxxx',
                 'secret' => 'xxxxxxxxxxxxxxxx',
                 'title' => '钉钉机器人异常通知',

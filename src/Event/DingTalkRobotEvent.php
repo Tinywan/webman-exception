@@ -16,27 +16,34 @@ class DingTalkRobotEvent
      * @param array $args
      * @param array $config
      * @param string $name
+     * @param string $text
      * @return bool|string
      */
-    public static function dingTalkRobot(array $args, array $config, string $name = '')
+    public static function dingTalkRobot(array $args, array $config, string $name = '', string $text = '')
     {
         $config =  $config['event_trigger']['dingtalk'];
         $accessToken = $config['accessToken'];
         $secret = $config['secret'];
         $title = $config['title'];
+        $message  = ' - <font color="#dd00dd">监控来源： ' .$title. "</font> \n";
         if (!empty($name)) {
             $title = $name;
+            $message = ' - <font color="#dd0000">监控来源： ' .$title. "</font> \n";
         }
-        $message  = ' - <font color="#dd00dd">监控来源： ' .$title. "</font> \n";
+
+        if (!empty($text)) {
+            $message .= $text;
+        }
+
         $message .= ' - 响应错误： ' .$args['message']. " \n";
         $message .= ' - 详细错误：' . $args['error'] . " \n";
-        $message .= ' - 请求域名：' . $args['domain'] ?? '__' . " \n";
+        $message .= ' - 请求域名：' . $args['domain'] . " \n";
         $message .= ' - 请求路由：' . $args['request_url'] . " \n";
         $message .= ' - 请求IP：' . $args['client_ip'] . " \n";
         $message .= ' - 请求时间：' . $args['timestamp'] . " \n";
         $message .= ' - 请求参数：' . json_encode($args['request_param'], JSON_UNESCAPED_UNICODE) . " \n";
         $message .= ' - 异常文件：' . $args['file'] . " \n";
-        $message .= ' - 异常文件行数：' . $args['line'] . " \n";
+        $message .= ' - 文件行数：' . $args['line'] . " \n";
         $data = [
             'msgtype' => 'markdown',
             'markdown' => [
