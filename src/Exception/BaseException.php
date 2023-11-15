@@ -51,12 +51,16 @@ class BaseException extends \Exception
      * BaseException constructor.
      * @param string $errorMessage
      * @param array $params
+     * @param string $error
      */
-    public function __construct(string $errorMessage = '', array $params = [])
+    public function __construct(string $errorMessage = '', array $params = [], string $error = '')
     {
         parent::__construct();
         if (!empty($errorMessage)) {
             $this->errorMessage = $errorMessage;
+        }
+        if (!empty($error)) {
+            $this->error = $error;
         }
         if (!empty($params)) {
             if (array_key_exists('statusCode', $params)) {
