@@ -74,6 +74,13 @@ class Handler extends ExceptionHandler
     protected $config = [];
 
     /**
+     * Log Error message.
+     *
+     * @var string
+     */
+    public $error = 'no error';
+
+    /**
      * @param Throwable $exception
      */
     public function report(Throwable $exception)
@@ -130,6 +137,7 @@ class Handler extends ExceptionHandler
             $this->header = $e->header;
             $this->errorCode = $e->errorCode;
             $this->errorMessage = $e->errorMessage;
+            $this->error = $e->error;
             if (isset($e->data)) {
                 $this->responseData = array_merge($this->responseData, $e->data);
             }
@@ -197,7 +205,7 @@ class Handler extends ExceptionHandler
         if (!$this->shouldntReport($e) && $this->config['event_trigger']['enable'] ?? false) {
             $responseData = $this->responseData;
             $responseData['message'] = $this->errorMessage;
-            $responseData['error'] = $e->getMessage();
+            $responseData['error'] = $this->error;
             $responseData['file'] = $e->getFile();
             $responseData['line'] = $e->getLine();
             DingTalkRobotEvent::dingTalkRobot($responseData, $this->config);

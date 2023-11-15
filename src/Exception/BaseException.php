@@ -42,6 +42,12 @@ class BaseException extends \Exception
     public $data = [];
 
     /**
+     * Detail Log Error message.
+     * @var string
+     */
+    public $error = '';
+
+    /**
      * BaseException constructor.
      * @param string $errorMessage
      * @param array $params
