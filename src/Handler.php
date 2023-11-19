@@ -10,6 +10,9 @@ declare(strict_types=1);
 namespace Tinywan\ExceptionHandler;
 
 use FastRoute\BadRouteException;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use Throwable;
 use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 use Tinywan\ExceptionHandler\Exception\BaseException;
@@ -170,6 +173,9 @@ class Handler extends ExceptionHandler
         }  elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
+        } elseif ($e instanceof DbException || $e instanceof DataNotFoundException || $e instanceof ModelNotFoundException) {
+            $this->statusCode = 500;
+            $this->errorMessage = 'DbException：'.$e->getMessage();
         } elseif ($e instanceof ServerErrorHttpException) {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = $e->errorMessage;
