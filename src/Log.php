@@ -26,6 +26,8 @@ class Log extends \support\Log
     {
         // todo 触发钉钉机器人报警
         if ($name === 'error') {
+            $message = $arguments[0] ?? '未知错误';
+            $data = $arguments[1] ?? [];
             $config = config('plugin.tinywan.exception-handler.app.exception_handler', []);
             DingTalkRobotEvent::dingTalkRobot($arguments, $config);
         }
