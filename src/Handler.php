@@ -164,24 +164,27 @@ class Handler extends ExceptionHandler
             $this->statusCode = $status['route'] ?? 404;
         } elseif ($e instanceof ValidateException) {
             $this->statusCode = $status['validate'];
-        }  elseif ($e instanceof JwtTokenException) {
+        } elseif ($e instanceof JwtTokenException) {
             $this->statusCode = $status['jwt_token'];
         } elseif ($e instanceof JwtTokenExpiredException) {
             $this->statusCode = $status['jwt_token_expired'];
         } elseif ($e instanceof JwtRefreshTokenExpiredException) {
             $this->statusCode = $status['jwt_refresh_token_expired'];
-        }  elseif ($e instanceof \InvalidArgumentException) {
+        } elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
         } elseif ($e instanceof DbException || $e instanceof DataNotFoundException || $e instanceof ModelNotFoundException) {
             $this->statusCode = 500;
-            $this->errorMessage = 'DbException：'.$e->getMessage();
-        } elseif ($e instanceof ServerErrorHttpException) {
-            $this->statusCode = $status['server_error'] ?? 500;
-            $this->errorMessage = $e->errorMessage;
+            $this->errorMessage = 'Db：' . $e->getMessage();
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = 'Server Unknown Error';
+            Log::error(array_merge($this->responseData, [
+                'message' => $this->errorMessage,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]));
         }
     }
 
@@ -232,7 +235,7 @@ class Handler extends ExceptionHandler
             $exceptionSpan = request()->tracer->newChild($samplingFlags);
             $exceptionSpan->setName('exception');
             $exceptionSpan->start();
-            $exceptionSpan->tag('error.code', (string) $this->errorCode);
+            $exceptionSpan->tag('error.code', (string)$this->errorCode);
             $value = [
                 'event' => 'error',
                 'message' => $this->errorMessage,
