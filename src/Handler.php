@@ -176,10 +176,15 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof DbException || $e instanceof DataNotFoundException || $e instanceof ModelNotFoundException) {
             $this->statusCode = 500;
             $this->errorMessage = 'Db：' . $e->getMessage();
+        } elseif ($e instanceof ServerErrorHttpException) {
+            $this->statusCode = 500;
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = 'Server Unknown Error';
-            Log::error(array_merge($this->responseData, [
+        }
+
+        if ($this->statusCode === 500) {
+            Log::error($this->errorMessage, array_merge($this->responseData, [
                 'message' => $this->errorMessage,
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),

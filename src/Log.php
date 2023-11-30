@@ -15,10 +15,19 @@ use Tinywan\ExceptionHandler\Event\DingTalkRobotEvent;
 
 class Log extends \support\Log
 {
+    /**
+     * @desc __callStatic
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     * @author Tinywan(ShaoBo Wan)
+     */
     public static function __callStatic($name, $arguments)
     {
+        // todo 触发钉钉机器人报警
         if ($name === 'error') {
-            // todo 触发钉钉机器人报警
+            $config = config('plugin.tinywan.exception-handler.app.exception_handler', []);
+            DingTalkRobotEvent::dingTalkRobot($arguments, $config);
         }
         return parent::__callStatic($name, $arguments);
     }
