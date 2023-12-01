@@ -39,7 +39,7 @@ class Logger extends \support\Log
                 'line' => $original['line'] ?? '--',
             ];
             $title = '开发环境';
-            if (isset($args['domain'])) {
+            if (isset($args['domain']) && isset($config['domain'])) {
                 if (strstr($args['domain'], $config['domain']['test'] ?? '')) {
                     $title = '测试环境';
                 } elseif (strstr($args['domain'], $config['domain']['pre'] ?? '')) {
