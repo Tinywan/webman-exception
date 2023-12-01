@@ -40,6 +40,13 @@ return [
                 'title' => '钉钉机器人异常通知',
             ]
         ],
+        /** 异常报警域名标题 */
+        'domain' => [
+            'dev' => 'dev-api.tinywan.com', // 开发环境
+            'test' => 'test-api.tinywan.com', // 测试环境
+            'pre' => 'pre-api.tinywan.com', // 预发环境
+            'prod' => 'api.tinywan.com',  // 生产环境
+        ],
     ],
 
 ];
