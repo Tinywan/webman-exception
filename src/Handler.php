@@ -179,12 +179,6 @@ class Handler extends ExceptionHandler
             $this->error = $e->getMessage();
         }  elseif ($e instanceof ServerErrorHttpException) {
             $this->statusCode = 500;
-            Logger::error($this->errorMessage, array_merge($this->responseData, [
-                'message' => $this->errorMessage,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]));
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = 'Internal Server Error';
