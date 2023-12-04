@@ -1,6 +1,6 @@
 <?php
 /**
- * @desc Log
+ * @desc Logger
  * @author Tinywan(ShaoBo Wan)
  * @email 756684177@qq.com
  * @date 2023/11/30 22:04
@@ -30,14 +30,21 @@ class Logger extends \support\Log
             $args = [
                 'message' => current($arguments),
                 'error' => $original['error'] ?? '--',
-                'domain' => $original['domain'] ?? request()->host(),
-                'request_url' => $original['request_url'] ?? request()->uri(),
-                'client_ip' => $original['client_ip'] ?? request()->getRealIp(),
+                'domain' => $original['domain'] ?? '--',
+                'request_url' => $original['request_url'] ?? '--',
+                'client_ip' => $original['client_ip'] ?? '127.0.0.1',
                 'timestamp' => $original['timestamp'] ?? date('Y-m-d H:i:s'),
-                'request_param' => $original['request_param'] ?? request()->all(),
+                'request_param' => $original['request_param'] ?? [],
                 'file' => $original['file'] ?? '--',
                 'line' => $original['line'] ?? '--',
             ];
+            /**是否命令行模式*/
+            if (!empty(request())) {
+                $args['domain'] = request()->host();
+                $args['request_url'] = request()->uri();
+                $args['client_ip'] = request()->getRealIp();
+                $args['request_param'] = request()->all();
+            }
             $title = '开发环境';
             if (isset($args['domain']) && isset($config['domain'])) {
                 if (strstr($args['domain'], $config['domain']['test'] ?? '')) {
@@ -49,7 +56,7 @@ class Logger extends \support\Log
                 }
             }
             DingTalkRobotEvent::dingTalkRobot($args, $config, $title);
+            return parent::__callStatic($name, $arguments);
         }
-        return parent::__callStatic($name, $arguments);
     }
 }
