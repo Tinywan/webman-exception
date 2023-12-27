@@ -38,22 +38,25 @@ class Logger extends \support\Log
                 'file' => $original['file'] ?? '--',
                 'line' => $original['line'] ?? '--',
             ];
+
+            $title = '开发环境';
             /**是否命令行模式*/
             if (!empty(request())) {
                 $args['domain'] = request()->host();
                 $args['request_url'] = request()->uri();
                 $args['client_ip'] = request()->getRealIp();
                 $args['request_param'] = request()->all();
-            }
-            $title = '开发环境';
-            if (isset($args['domain']) && isset($config['domain'])) {
-                if (strstr($args['domain'], $config['domain']['test'] ?? '')) {
-                    $title = '测试环境';
-                } elseif (strstr($args['domain'], $config['domain']['pre'] ?? '')) {
-                    $title = '预发环境';
-                } elseif (strstr($args['domain'], $config['domain']['prod'] ?? '')) {
-                    $title = '正式环境';
+                if (isset($args['domain']) && isset($config['domain'])) {
+                    if (strstr($args['domain'], $config['domain']['test'] ?? '')) {
+                        $title = '测试环境';
+                    } elseif (strstr($args['domain'], $config['domain']['pre'] ?? '')) {
+                        $title = '预发环境';
+                    } elseif (strstr($args['domain'], $config['domain']['prod'] ?? '')) {
+                        $title = '正式环境';
+                    }
                 }
+            } else {
+                $title = '命令行环境';
             }
             DingTalkRobotEvent::dingTalkRobot($args, $config, $title);
             return parent::__callStatic($name, $arguments);

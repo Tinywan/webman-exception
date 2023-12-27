@@ -144,9 +144,6 @@ class Handler extends ExceptionHandler
             if (isset($e->data)) {
                 $this->responseData = array_merge($this->responseData, $e->data);
             }
-            if (!$e instanceof ServerErrorHttpException) {
-                return;
-            }
         }
         $this->solveExtraException($e);
     }
@@ -178,11 +175,17 @@ class Handler extends ExceptionHandler
             $this->errorMessage = 'Db：' . $e->getMessage();
             $this->error = $e->getMessage();
         }  elseif ($e instanceof ServerErrorHttpException) {
+            $this->errorMessage = $e->errorMessage;
             $this->statusCode = 500;
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = 'Internal Server Error';
             $this->error = $e->getMessage();
+            Logger::error($this->errorMessage, array_merge($this->responseData, [
+                'error' => $this->error,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]));
         }
     }
 
