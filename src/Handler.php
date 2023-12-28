@@ -144,6 +144,9 @@ class Handler extends ExceptionHandler
             if (isset($e->data)) {
                 $this->responseData = array_merge($this->responseData, $e->data);
             }
+            if (!$e instanceof ServerErrorHttpException) {
+                return;
+            }
         }
         $this->solveExtraException($e);
     }
