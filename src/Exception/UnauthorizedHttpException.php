@@ -25,10 +25,10 @@ class UnauthorizedHttpException extends BaseException
     /**
      * HTTP 状态码
      */
-    public $statusCode = 401;
+    public int $statusCode = 401;
 
     /**
      * 错误消息.
      */
-    public $errorMessage = 'Unauthorized';
+    public string $errorMessage = 'Unauthorized';
 }

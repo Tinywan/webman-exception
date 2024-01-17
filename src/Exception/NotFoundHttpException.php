@@ -17,10 +17,10 @@ class NotFoundHttpException extends BaseException
     /**
      * @var int
      */
-    public $statusCode = 404;
+    public int $statusCode = 404;
 
     /**
      * @var string
      */
-    public $errorMessage = '未找到请求的资源';
+    public string $errorMessage = '未找到请求的资源';
 }

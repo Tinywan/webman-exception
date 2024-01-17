@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @desc 服务器内部异常
  *
@@ -24,10 +23,10 @@ class ServerErrorHttpException extends BaseException
     /**
      * @var int
      */
-    public $statusCode = 500;
+    public int $statusCode = 500;
 
     /**
      * @var string
      */
-    public $errorMessage = 'Internal Server Error';
+    public string $errorMessage = 'Internal Server Error';
 }

@@ -15,37 +15,37 @@ class BaseException extends \Exception
     /**
      * HTTP Response Status Code.
      */
-    public $statusCode = 400;
+    public int $statusCode = 400;
 
     /**
      * HTTP Response Header.
      */
-    public $header = [];
+    public array $header = [];
 
     /**
      * Business Error code.
      *
      * @var int|mixed
      */
-    public $errorCode = 0;
+    public int $errorCode = 0;
 
     /**
      * Business Error message.
      * @var string
      */
-    public $errorMessage = 'The requested resource is not available or not exists';
+    public string $errorMessage = 'The requested resource is not available or not exists';
 
     /**
      * Business data.
      * @var array|mixed
      */
-    public $data = [];
+    public array $data = [];
 
     /**
      * Detail Log Error message.
      * @var string
      */
-    public $error = '';
+    public string $error = '';
 
     /**
      * BaseException constructor.
@@ -55,7 +55,7 @@ class BaseException extends \Exception
      */
     public function __construct(string $errorMessage = '', array $params = [], string $error = '')
     {
-        parent::__construct();
+        parent::__construct($errorMessage, $this->statusCode);
         if (!empty($errorMessage)) {
             $this->errorMessage = $errorMessage;
         }

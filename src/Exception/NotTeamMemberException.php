@@ -15,18 +15,18 @@ class NotTeamMemberException extends BaseException
     /**
      * HTTP 状态码
      */
-    public $statusCode = 403;
+    public int $statusCode = 403;
 
     /**
      * 错误消息.
      */
-    public $errorMessage = '您无权访问该资源';
+    public string $errorMessage = '您无权访问该资源';
 
     /**
      * @var array|string[]
      */
-    public $data = [
-        'id' => 'tinywan2022',
-        'name' => '团队名称：开源技术小栈'
+    public array $data = [
+        'id' => 'tinywan2028',
+        'name' => '开源技术小栈'
     ];
 }

@@ -21,13 +21,13 @@ class ForbiddenHttpException extends BaseException
     /**
      * @var int
      */
-    public $statusCode = 403;
+    public int $statusCode = 403;
 
     /**
      * @link 解决跨域问题
      * @var array
      */
-    public $header = [
+    public array $header = [
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Credentials' => 'true',
         'Access-Control-Allow-Headers' => 'Authorization,Content-Type,If-Match,If-Modified-Since,If-None-Match,If-Unmodified-Since,X-Requested-With,Origin',
@@ -37,5 +37,5 @@ class ForbiddenHttpException extends BaseException
     /**
      * @var string
      */
-    public $errorMessage = '对不起，您没有该接口访问权限，请联系管理员';
+    public string $errorMessage = '对不起，您没有该接口访问权限，请联系管理员';
 }

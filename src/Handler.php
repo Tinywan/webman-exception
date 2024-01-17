@@ -39,49 +39,49 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    public $statusCode = 200;
+    public int $statusCode = 200;
 
     /**
      * HTTP Response Header.
      *
      * @var array
      */
-    public $header = [];
+    public array $header = [];
 
     /**
      * Business Error code.
      *
      * @var int
      */
-    public $errorCode = 0;
+    public int $errorCode = 0;
 
     /**
      * Business Error message.
      *
      * @var string
      */
-    public $errorMessage = 'no error';
+    public string $errorMessage = 'no error';
 
     /**
      * 响应结果数据.
      *
      * @var array
      */
-    protected $responseData = [];
+    protected array $responseData = [];
 
     /**
      * config下的配置.
      *
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Log Error message.
      *
      * @var string
      */
-    public $error = 'no error';
+    public string $error = 'no error';
 
     /**
      * @param Throwable $exception
@@ -99,7 +99,7 @@ class Handler extends ExceptionHandler
      */
     public function render(Request $request, Throwable $exception): Response
     {
-        $this->config = array_merge($this->config, config('plugin.tinywan.exception-handler.app.exception_handler', []));
+        $this->config = array_merge($this->config, config('plugin.tinywan.exception-handler.app.exception_handler', []) ?? []);
 
         $this->addRequestInfoToResponse($request);
         $this->solveAllException($exception);
