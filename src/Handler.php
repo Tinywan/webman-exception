@@ -162,6 +162,10 @@ class Handler extends ExceptionHandler
         $this->errorMessage = $e->getMessage();
         if ($e instanceof BadRouteException) {
             $this->statusCode = $status['route'] ?? 404;
+        } elseif ($e instanceof \TypeError) {
+            $this->statusCode = 400;
+            $this->errorMessage = '参数类型与预期声明的参数类型不匹配';
+            $this->error = $e->getMessage();
         } elseif ($e instanceof ValidateException) {
             $this->statusCode = $status['validate'];
         } elseif ($e instanceof JwtTokenException) {
