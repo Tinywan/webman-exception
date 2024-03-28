@@ -40,7 +40,7 @@ class Logger extends \support\Log
             ];
 
             $title = '开发环境';
-            /**是否命令行模式*/
+            /** 是否命令行模式 */
             if (!empty(request())) {
                 $args['domain'] = request()->host();
                 $args['request_url'] = request()->uri();
@@ -56,10 +56,17 @@ class Logger extends \support\Log
                     }
                 }
             } else {
-                $title = '命令行环境';
+                $env = '测试';
+                if (isset($config['is_prod_env']) && is_callable($config['is_prod_env'])) {
+                    if ($config['is_prod_env']()) {
+                        $env = '正式';
+                    }
+                }
+                $title = $env . '环境 [命令行终端]';
             }
             DingTalkRobotEvent::dingTalkRobot($args, $config, $title);
             return parent::__callStatic($name, $arguments);
         }
+        return [];
     }
 }

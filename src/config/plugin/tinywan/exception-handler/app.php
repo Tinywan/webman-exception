@@ -47,6 +47,10 @@ return [
             'pre' => 'pre-api.tinywan.com', // 预发环境
             'prod' => 'api.tinywan.com',  // 生产环境
         ],
+        /** 是否生产环境 。可以通过配置文件或者数据库读取返回 eg：return config('app.env') === 'prod';*/
+        'is_prod_env' => function () {
+            return false;
+        },
     ],
 
 ];
