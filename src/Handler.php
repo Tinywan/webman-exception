@@ -265,7 +265,7 @@ class Handler extends ExceptionHandler
         $bodyKey = array_keys($this->config['body']);
         $bodyValue = array_values($this->config['body']);
         $responseBody = [
-            $bodyKey[0] ?? 'code' => $this->errorCode ?? $bodyValue[0] ?? 0,
+            $bodyKey[0] ?? 'code' => $this->errorCode > 0 ? $this->errorCode : $bodyValue[0] ?? 0,
             $bodyKey[1] ?? 'msg' => $this->errorMessage,
             $bodyKey[2] ?? 'data' => $this->responseData,
         ];
