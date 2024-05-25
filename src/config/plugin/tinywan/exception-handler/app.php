@@ -23,6 +23,7 @@ return [
             'jwt_token_expired' => 401, // 访问令牌过期
             'jwt_refresh_token_expired' => 402, // 刷新令牌过期
             'server_error' => 500, // 服务器内部错误
+            'server_error_is_response' => false, // 是否响应服务器内部错误
         ],
         // 自定义响应消息
         'body' => [

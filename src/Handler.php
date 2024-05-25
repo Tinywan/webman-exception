@@ -178,7 +178,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
-        } elseif ($e instanceof DbException || $e instanceof DataNotFoundException || $e instanceof ModelNotFoundException) {
+        } elseif ($e instanceof DbException) {
             $this->statusCode = 500;
             $this->errorMessage = 'Db：' . $e->getMessage();
             $this->error = $e->getMessage();
@@ -187,7 +187,7 @@ class Handler extends ExceptionHandler
             $this->statusCode = 500;
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
-            $this->errorMessage = 'Internal Server Error';
+            $this->errorMessage = isset($status['server_error_is_response']) && $status['server_error_is_response'] ? $e->getMessage() : 'Internal Server Error';
             $this->error = $e->getMessage();
             Logger::error($this->errorMessage, array_merge($this->responseData, [
                 'error' => $this->error,
