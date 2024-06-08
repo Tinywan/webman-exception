@@ -24,6 +24,8 @@ return [
             'jwt_refresh_token_expired' => 402, // 刷新令牌过期
             'server_error' => 500, // 服务器内部错误
             'server_error_is_response' => false, // 是否响应服务器内部错误
+            'type_error' => 400, // 参数类型错误码
+            'type_error_is_response' => false, // 参数类型与预期声明的参数类型不匹配
         ],
         // 自定义响应消息
         'body' => [

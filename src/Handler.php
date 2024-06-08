@@ -163,9 +163,8 @@ class Handler extends ExceptionHandler
         if ($e instanceof BadRouteException) {
             $this->statusCode = $status['route'] ?? 404;
         } elseif ($e instanceof \TypeError) {
-            $this->statusCode = 400;
-            // 参数类型与预期声明的参数类型不匹配
-            $this->errorMessage = '网络连接似乎有点不稳定。请检查您的网络！';
+            $this->statusCode = $status['type_error'] ?? 400;
+            $this->errorMessage = isset($status['type_error_is_response']) && $status['type_error_is_response'] ? $e->getMessage() : '网络连接似乎有点不稳定。请检查您的网络！';
             $this->error = $e->getMessage();
         } elseif ($e instanceof ValidateException) {
             $this->statusCode = $status['validate'];
@@ -182,7 +181,7 @@ class Handler extends ExceptionHandler
             $this->statusCode = 500;
             $this->errorMessage = 'Db：' . $e->getMessage();
             $this->error = $e->getMessage();
-        }  elseif ($e instanceof ServerErrorHttpException) {
+        } elseif ($e instanceof ServerErrorHttpException) {
             $this->errorMessage = $e->errorMessage;
             $this->statusCode = 500;
         } else {
@@ -265,9 +264,9 @@ class Handler extends ExceptionHandler
         $bodyKey = array_keys($this->config['body']);
         $bodyValue = array_values($this->config['body']);
         $responseBody = [
-            $bodyKey[0] ?? 'code' => $this->errorCode > 0 ? $this->errorCode : $bodyValue[0] ?? 0,
-            $bodyKey[1] ?? 'msg' => $this->errorMessage,
-            $bodyKey[2] ?? 'data' => $this->responseData,
+                $bodyKey[0] ?? 'code' => $this->errorCode > 0 ? $this->errorCode : $bodyValue[0] ?? 0,
+                $bodyKey[1] ?? 'msg' => $this->errorMessage,
+                $bodyKey[2] ?? 'data' => $this->responseData,
         ];
 
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->header);
