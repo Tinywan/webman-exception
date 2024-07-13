@@ -264,12 +264,20 @@ class Handler extends ExceptionHandler
         $bodyKey = array_keys($this->config['body']);
         $bodyValue = array_values($this->config['body']);
         $responseBody = [
-                $bodyKey[0] ?? 'code' => $this->errorCode > 0 ? $this->errorCode : $bodyValue[0] ?? 0,
+                $bodyKey[0] ?? 'code' => $this->setCode($bodyValue, $this->errorCode), // 自定义异常code码
                 $bodyKey[1] ?? 'msg' => $this->errorMessage,
                 $bodyKey[2] ?? 'data' => $this->responseData,
         ];
 
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->header);
         return new Response($this->statusCode, $header, json_encode($responseBody));
+    }
+
+    private function setCode($bodyValue, $errorCode)
+    {
+        if($errorCode > 0){
+            return $errorCode;
+        }
+        return  $bodyValue[0] ?? 0;
     }
 }
