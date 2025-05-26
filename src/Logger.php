@@ -63,6 +63,9 @@ class Logger extends \support\Log
                     }
                 }
                 $title = $env . '环境 [命令行终端]';
+                if ($env == '正式' && !empty($config['event_trigger']['dingtalk_prod'])) {
+                    $config['event_trigger']['dingtalk'] = $config['event_trigger']['dingtalk_prod'];
+                }
             }
             DingTalkRobotEvent::dingTalkRobot($args, $config, $title);
             return parent::__callStatic($name, $arguments);
