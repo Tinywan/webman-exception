@@ -270,7 +270,7 @@ class Handler extends ExceptionHandler
         ];
 
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->header);
-        return new Response($this->statusCode, $header, json_encode($responseBody));
+        return new Response($this->statusCode, $header, json_encode($responseBody,JSON_UNESCAPED_UNICODE));
     }
 
     private function setCode($bodyValue, $errorCode)
