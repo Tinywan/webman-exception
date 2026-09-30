@@ -99,7 +99,6 @@ class DingTalkRobotEvent
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $data = curl_exec($ch);
-        curl_close($ch);
         return $data;
     }
 }

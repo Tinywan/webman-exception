@@ -85,6 +85,5 @@ class FeiShuRobotEvent
         } else {
             echo '请求成功';
         }
-        curl_close($ch);
     }
 }
